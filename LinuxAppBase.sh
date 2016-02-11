@@ -61,16 +61,30 @@ cd ../../
 make
 make install
 
+#Build Install SOLR
+cd /usr4/
+wget http://apache.arvixe.com/lucene/solr/5.4.1/solr-5.4.1.tgz
+cd /usr1/
+cp /usr4/solr-5.4.1.tgz .
+tar -xzvf solr-5.4.1.tgz
+mv solr-5.4.1 solr
+rm -rf solr-5.4.1.tgz
+
 #Link logs to /usr3
-mkdir /usr3/apache
+mkdir /usr3/apache /usr3/solr
 cd /usr3/apache/
 ln -s /usr1/apache/logs/ logs
+cd ../solr
+ln -s /usr1/solr/server/logs
 
 #Add Apache to rc.local to ensure it starts on boot
 echo "#Start Apache on Boot" >> /etc.rc.local
 echo /usr1/apache/bin/httpd -k start >> /etc.rc.local
 
-#Start Apache
+#Add SOLR to rc.local to ensure it starts on boot
+echo "#Start SOLR on Boot" >> /etc.rc.local
+echo /usr1/solr/bin/solr start -p 8080 >> /etc.rc.local#Start Apache
+
 /usr1/apache/bin/httpd -k start
 
 
